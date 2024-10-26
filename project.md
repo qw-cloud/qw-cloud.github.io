@@ -104,12 +104,26 @@ These experimental results clearly indicate that deep learning methods, particul
 
 
 
+The custom ResNet model demonstrated exceptional classification performance, as evidenced by its confusion matrix: true negatives (TN) totaled 23,796 (99.2%), true positives (TP) reached 7,665 (95.8%), false negatives (FN) were 335 (4.2%), and false positives (FP) remained low at 204 (0.9%). These results indicate high model accuracy in distinguishing positive and negative samples, with particularly strong control over the false positive rate.
+
 ![confusion_matrix_enhanced](https://github.com/user-attachments/assets/9c56290a-a76a-49ad-a760-d832e6237680)
+**Figure 4: ResNet Confusion Matrix**
+
+The model’s classification strength is further highlighted by an area under the ROC curve (AUC) of 0.997, close to the ideal value of 1.0, demonstrating excellent discriminative ability. Additionally, the precision-recall (PR) curve yielded an average precision (AP) of 0.990, with a consistently high curve, indicating that the model sustains both high precision and high recall.
+
+![image](https://github.com/user-attachments/assets/7111eb5a-eb7e-4604-9b08-20feb1cdd746)
+**Figure 5: ResNet Performance Curves**
 
 
+The model's training history further supports its strong learning characteristics:
 
-[点击这里查看交互式训练历史记录](https://username.github.io/repository-name/output/training_history.html)
+**Accuracy**: Training accuracy (solid blue line) steadily increased from an initial 0.93 to exceed 0.99, while validation accuracy (dashed blue line) showed some variability but generally maintained high values (between 0.85 and 0.98).
 
+**Loss**: Training loss (solid red line) consistently decreased to a low level, while validation loss (dashed red line) displayed occasional fluctuations (notably around epochs 5 and 15) but trended favorably overall without signs of persistent overfitting.
+![image](https://github.com/user-attachments/assets/f4949e50-213a-445a-a3fa-83231c701169)
+**Figure 6: ResNet Training History**
+
+These metrics collectively suggest that the custom ResNet model achieved outstanding classification performance with robust generalization. While some fluctuation occurred during training, the model ultimately stabilized, achieving effective feature learning likely enhanced by the unique advantages of residual connections in handling image features.
 
 ## Discussion
 
