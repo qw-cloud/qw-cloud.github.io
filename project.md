@@ -1,4 +1,4 @@
-![feature_maps_layer_7](https://github.com/user-attachments/assets/a5a3dc38-b63a-4175-8875-bfcf0b5b6665)## Final Project: Automated Aircraft Detection in Satellite Imagery Using Deep Learning
+## Final Project: Automated Aircraft Detection in Satellite Imagery Using Deep Learning
 Frank Wu
 
 Department of Environmental Health Science, UCLA
@@ -127,26 +127,34 @@ These metrics collectively suggest that the custom ResNet model achieved outstan
 Feature maps represent the activation outputs of convolutional layers, allowing analysis of feature extraction capabilities at each layer. Different colors correspond to activation value ranges, illustrating the network's response intensity to inputs at specific layers. With increasing convolutional layer depth, the complexity of feature extraction progressively intensifies:
 
 **Conv Layer 1** captures simple edges and textures, highlighting local variations in the input.
-**Conv Layers 2 to 5** depict blurred texture features, gradually expanding the receptive field to capture more intricate edge combinations and local structures.
-**Conv Layers 6 to 8** show further blurring, reflecting the extraction of more abstract compositional patterns within the image.
-**Conv Layer 9** exhibits dispersed activation patterns, enhancing the detection of higher-level shape features.
-**Conv Layer 10** reveals strong regional activations aimed at extracting global image features, which support the final classification.
-From lower to higher layers, the feature maps of ResNet illustrate the network's hierarchical abstraction, transitioning from spatial details to global pattern recognition. This progression highlights ResNet's mechanism of building from basic features to complex patterns, enabling robust image recognition.
-
 ![feature_maps_layer_1](https://github.com/user-attachments/assets/f085212b-038e-4185-ad33-df841d70b2d6)
+
+**Conv Layers 2 to 5** depict blurred texture features, gradually expanding the receptive field to capture more intricate edge combinations and local structures.
+
 ![feature_maps_layer_2](https://github.com/user-attachments/assets/6a577527-670a-4b3b-9ee9-489402883155)
 ![feature_maps_layer_3](https://github.com/user-attachments/assets/774a30b3-3e1d-4289-9c9c-7e62551d7cc4)
 ![feature_maps_layer_4](https://github.com/user-attachments/assets/59970d90-2d8b-4bc9-a6fb-07d149526a57)
 ![feature_maps_layer_5](https://github.com/user-attachments/assets/ba552c5b-73b6-4196-96b5-2d325aa426a1)
+
+**Conv Layers 6 to 8** show further blurring, reflecting the extraction of more abstract compositional patterns within the image.
+
 ![feature_maps_layer_6](https://github.com/user-attachments/assets/26e715b8-92e7-4c38-be27-4681f631fe01)
 ![feature_maps_layer_7](https://github.com/user-attachments/assets/052f51e2-6091-4075-a269-a145b7e84df4)
 ![feature_maps_layer_8](https://github.com/user-attachments/assets/bba7d621-8a2a-480a-afff-b5c61a5d7960)
+
+**Conv Layer 9** exhibits dispersed activation patterns, enhancing the detection of higher-level shape features.
+
 ![feature_maps_layer_9](https://github.com/user-attachments/assets/2e488bf8-a9f0-4497-a0ec-a972a8bf6bc6)
+
+**Conv Layer 10** reveals strong regional activations aimed at extracting global image features, which support the final classification.
+
 ![feature_maps_layer_10](https://github.com/user-attachments/assets/314069bf-3f57-4a1d-9926-4dadaeede071)
+
+From lower to higher layers, the feature maps of ResNet illustrate the network's hierarchical abstraction, transitioning from spatial details to global pattern recognition. This progression highlights ResNet's mechanism of building from basic features to complex patterns, enabling robust image recognition.
 
 **Figure 7: Feature Importantce 1-10 with ResNet**
 
-## Discussion
+## Discussion (Part 1)
 In object detection across four scenarios, both a basic convolutional neural network (CNN) and a residual network (ResNet) were applied, with ResNet consistently producing fewer detection boxes than the CNN model. The CNN demonstrated a tendency toward generating a higher number of detections (with more false positives), while ResNet achieved more concise detections with higher confidence scores.
 
 **Scenario 1: Airport Scene**
@@ -187,13 +195,62 @@ ResNet Detection (Even Image 8): ResNet detected 165 targets, still high but few
 
 **Figure 8: Scenario Verification With Basic CNN vs. Custom ResNet**
 
-So, the basic CNN model demonstrated heightened sensitivity to low-level features, effectively capturing edges and textures but often at the cost of increased false positives, particularly in high-frequency areas. While CNN performed well in complex regions, its control over edge and noise sensitivity was limited. ResNet’s residual block design minimized information loss, enabling the model to better capture high-level features as network depth increased. This sensitivity to high-level characteristics allowed ResNet to reduce false positives across various scene complexities, excelling in well-defined areas. Consequently, ResNet proved more robust and stable across scenes, making it especially suitable for detecting targets in areas with distinct features.
+
+## Discussion (Part 2)
+
+In analyzing the differences between the basic CNN and ResNet architectures on lower-quality aircraft images, notable variations emerge in detection count, confidence range, false positives, and spatial distribution across four scenes:
+
+
+**Scene 1: Dense Aircraft Area on Tarmac**
+
+
+CNN Detection (Odd Image 1): The CNN model detected 35 targets with densely clustered boxes around the aircraft and tarmac. Confidence scores ranged widely from 0.34 to 1.00, reflecting CNN’s sensitivity to low-level features, which led to multiple detections on aircraft components (e.g., wings, tails) and overlapping, redundant boxes. This suggests CNN’s tendency to misinterpret background details, producing overlapping detections.
+ResNet Detection (Even Image 2): ResNet detected 14 targets, focusing detections on the primary aircraft bodies with high confidence (mostly 0.99 or 1.00). The model's attention to contour, structure, and spatial context minimized redundant boxes, indicating strong suppression of irrelevant background features and fewer false positives.
+
+![basic_cnn_images](https://github.com/user-attachments/assets/d32589ac-4fda-40e1-b03d-3c4343c9063a)
+![custom_resnet_images](https://github.com/user-attachments/assets/3292892b-d85e-4bd4-8225-d4e513989c4e)
+
+
+**Scene 2: Aircraft and Hangar Area with Dense Parking**
+
+CNN Detection (Odd Image 3): In this scene, CNN identified 40 targets, focusing on aircraft and tarmac with confidence scores from 0.30 to 1.00. Lower-confidence detections suggest CNN’s susceptibility to edges and textures, resulting in false positives due to small structural features on the tarmac. The model produced overlapping, low-confidence detections, driven by complex structural details.
+ResNet Detection (Even Image 4): ResNet identified 28 targets, with boxes concentrated on key parts of each aircraft and confidence mostly above 0.70. Its ability to extract high-level features enabled ResNet to focus on main aircraft structures, avoiding low-confidence detections and significantly reducing overlap. This stability in complex backgrounds highlights ResNet’s effectiveness in maintaining robust detections without false positives.
+
+
+![basic_cnn_images1](https://github.com/user-attachments/assets/5f0b48f7-d04f-49d3-82a0-8bb92d106de8)
+![custom_resnet_images1](https://github.com/user-attachments/assets/c53b2408-e564-46bf-bd4e-852b18e50606)
+
+**Scene 3: Highly Textured Tarmac with Multiple Aircraft**
+
+CNN Detection (Odd Image 5): The CNN model detected 255 targets, saturating the tarmac area with detection boxes due to a highly textured scene with similar structural features (e.g., aircraft contours, tarmac edges). Confidence varied from 0.30 to 1.00, and the high false positive rate was especially evident around edges and shadows, where numerous low-confidence detections were generated.
+ResNet Detection (Even Image 6): ResNet detected 126 targets, focusing primarily on aircraft bodies with minimal detections in the background. This model maintained high confidence (typically over 0.70), demonstrating more reliable detection of aircraft features and effective filtering of background noise in complex scenes. ResNet’s refined feature recognition capabilities allowed it to minimize false positives while concentrating on key targets.
+
+![basic_cnn_images2](https://github.com/user-attachments/assets/65321903-b4c5-49aa-bae3-926af47d80f5)
+![custom_resnet_images2](https://github.com/user-attachments/assets/771ce12b-1b8d-46dd-85ab-8baffbc22543)
+
+
+**Scene 4: Multiple Aircraft in Simplified Background**
+
+CNN Detection (Odd Image 7): In this simpler scene, CNN detected 24 targets with narrow confidence intervals (mostly 0.80 to 1.00), showing stable detection in low-complexity settings. However, minor overlapping detections were observed, especially around wings and tails, where CNN redundantly identified similar local features.
+ResNet Detection (Even Image 8): ResNet detected only 8 targets, focusing solely on aircraft bodies with high confidence (all above 0.80), effectively avoiding overlap and redundant detections seen in CNN. With minimal background interference, ResNet maintained precise focus on each aircraft’s main features, avoiding duplicate detections and achieving high detection accuracy.
+
+![basic_cnn_images3](https://github.com/user-attachments/assets/1e10c572-bd6e-4615-9b73-f7e674b5946e)
+![custom_resnet_images3](https://github.com/user-attachments/assets/b9b3f65b-df92-4459-b841-e25036ec96ac)
+
+**Figure 9: Additional Scenario Verification With Basic CNN vs. Custom ResNet**
+
+
+The basic CNN model demonstrated heightened sensitivity to low-level features, effectively capturing edges and textures but often at the cost of increased false positives, especially in complex or high-frequency areas. While CNN performed adequately in simpler backgrounds, it struggled with edge control and noise suppression, leading to redundant and overlapping detections.
+
+In contrast, ResNet’s residual block design minimized information loss, preserving critical features across deeper layers and enabling the model to capture high-level characteristics more effectively. This design allowed ResNet to maintain focus on core features, reduce false positives, and avoid redundant detections, particularly in complex or noisy scenes. Overall, ResNet proved more robust and stable across various scene complexities, excelling in well-defined areas and demonstrating superior adaptability for precise, high-confidence detection, particularly in challenging or lower-quality satellite imagery.
 
 ## Conclusion
 
-The experimental results underscore the fundamental architectural differences between traditional machine learning methods and deep learning models, each displaying unique strengths and limitations. However, it is evident that the custom ResNet model consistently outperforms across both the test dataset and real-world validation, accurately identifying the majority of aircraft targets with a markedly lower false positive rate compared to the basic CNN model.
+The experimental results underscore the fundamental architectural differences between traditional machine learning methods and deep learning models, each displaying unique strengths and limitations. However, it is evident that the custom ResNet model consistently outperforms across both the test dataset and real-world validation, accurately identifying the majority of aircraft targets with a markedly lower false positive rate compared to the basic CNN model (He et al., 2016)[^1].
 
-As similar architectures are considered for larger-scale or more complex satellite imagery, maintaining high performance while managing computational costs becomes crucial. Optimizing model structures for such applications will demand increased computational resources and training time. Residual neural networks represent a promising architecture, especially suited for tackling more sophisticated remote sensing detection tasks. Additionally, expanding the dataset to include a wider array of scene characteristics would be beneficial, as future research could extend to multi-object detection, enabling classification of various types of ground targets across different weather and terrain conditions. This expansion would further enhance model robustness and applicability in diverse remote sensing scenarios.
+As similar architectures are considered for larger-scale or more complex satellite imagery, maintaining high performance while managing computational costs becomes crucial. Optimizing model structures for such applications will demand increased computational resources and training time. Residual neural networks represent a promising architecture, especially suited for tackling more sophisticated remote sensing detection tasks [^2]. Additionally, expanding the dataset to include a wider array of scene characteristics would be beneficial, as future research could extend to multi-object detection, enabling classification of various types of ground targets across different weather and terrain conditions. This expansion would further enhance model robustness and applicability in diverse remote sensing scenarios.
 
+## References
+[^1]: He, K., Zhang, X., Ren, S., & Sun, J. (2016). Deep residual learning for image recognition. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 770-778).
 
-
+[^2]:Xie, S., Girshick, R., Dollár, P., Tu, Z., & He, K. (2017). Aggregated residual transformations for deep neural networks. In Proceedings of the IEEE conference on computer vision and pattern recognition (pp. 1492-1500).
