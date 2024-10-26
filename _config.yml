@@ -1,5 +1,6 @@
-title: 24F-A&O SCI-C111-LEC-1 / 24F-A&O SCI-C204-LEC-1
-description: A template for your AOS C111/204 project site.
-logo: /assets/IMG/template_logo.png
+title: "Automated Aircraft Detection in Satellite Imagery"
+description: "Exploration of machine learning techniques for aircraft detection in satellite imagery. Course: A&O SCI-C111 / C204"
+logo: "/assets/logo.png"
 show_downloads: true
-theme: jekyll-theme-modernist
+theme: jekyll-theme-cayman
+
