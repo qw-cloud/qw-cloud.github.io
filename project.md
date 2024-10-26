@@ -104,7 +104,12 @@ These experimental results clearly indicate that deep learning methods, particul
 
 
 
-Figure X shows... [description of Figure X].
+![confusion_matrix_enhanced](https://github.com/user-attachments/assets/9c56290a-a76a-49ad-a760-d832e6237680)
+
+
+
+[点击这里查看交互式训练历史记录](https://username.github.io/repository-name/output/training_history.html)
+
 
 ## Discussion
 
