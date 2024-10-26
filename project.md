@@ -3,6 +3,7 @@
 I applied machine learning techniques to investigate... Below is my report.
 
 ***
+![confusion_matrix_enhanced](https://github.com/user-attachments/assets/73ed04d0-4000-47d3-aed2-e1532010b1b0)
 
 ## Introduction 
 
