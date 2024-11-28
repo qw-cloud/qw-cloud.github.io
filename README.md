@@ -1,5 +1,5 @@
 ## Final Project: Automated Aircraft Detection in Satellite Imagery Using Deep Learning
-Frank Wu
+Qingyang (Frank) Wu
 
 Department of Environmental Health Science, UCLA
 
