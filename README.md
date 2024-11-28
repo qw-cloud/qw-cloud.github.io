@@ -5,7 +5,7 @@ Department of Environmental Health Science, UCLA
 
 AOS C204: Introduction to Machine Learning for the Physical Sciences
 
-Dr. Alexander Lozinski
+Instructor: Dr. Alexander Lozinski
 
 December 2024
 
