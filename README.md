@@ -67,7 +67,19 @@ The 1:3 class distribution ratio aligns with standard practices in computer visi
 The image resolution and dimensionality correspond to optimal parameters identified in satellite-based object detection literature
 The inclusion of diverse environmental conditions enhances model generalization capabilities
 
-This structured approach to dataset implementation enables systematic evaluation of model performance across varied operational conditions, while the supplementary validation framework provides additional assessment of model robustness and generalization capacity.
+**Validation on Complete Scenes**
+
+While our models are trained on 20x20 patches, the goal is to detect planes in larger satellite scenes. To accomplish this, I apply a sliding window approach across each full-resolution satellite scene. Concretely, I shift a 20x20 window over the scene in small strides (e.g., 5 pixels), extract each patch, and feed it into the trained model for classification. Any patch that yields a probability above a chosen detection threshold (e.g., 0.5) is considered a detection. To reduce overlapping boxes, I apply non-maximum suppression (NMS) on these detection proposals, thereby merging adjacent bounding boxes into a single detection region.
+
+This process is repeated for our primary validation scenes (four complete satellite images from the dataset) and for supplementary validation scenes (four new airport images) to measure real-world performance. I then count the number of correct detections (true positives), missed detections (false negatives), and false positives to calculate the overall accuracy, precision, and recall at the scene level. This approach ensures that although training occurs on small 20x20 samples, the final evaluation step simulates an actual detection workflow over full-scale imagery.
+
+**Data Preprocessing and Annotation Usage:**
+
+In this study, each raw satellite image is provided as three channels of pixel intensity (red, green, and blue). I normalize each channel by dividing by 255.0 to scale the pixel values into the range [0,1]. The processed dataset X is thus shaped as (𝑁,20,20,3), where N is the total number of samples (e.g., 32,000), and each 20x20 image contains 3 color channels.
+
+I were also provided with additional annotation specifications, including scene identifiers and geocentric coordinates (latitude/longitude). For the classification and detection tasks in this report, only the binary labels (0 for no-plane, 1 for plane) were dwerectly utilized as the training targets. The coordinates and scene identifiers were retained in the metadata for possible cross-referencing and advanced analyses (for instance, mapping detections back to real-world coordinates), but they were not explicitly used as inputs to the deep learning models.
+
+This preprocessing ensures that all models in subsequent sections receive uniformly scaled input images, facilitating stable and consistent model training.
 
 ![image](https://github.com/user-attachments/assets/037c60e2-a16e-4492-9311-04f408902bb3)
 **Source**: ["Planes in Satellite Imagery"](https://www.kaggle.com/datasets/rhammell/planesnet/data)
@@ -82,6 +94,18 @@ The top row of the first figure (with aircraft present) includes three heatmaps 
 
 **Figure 1: Average RGB values**
 
+
+**Model Initialization and Hyperparameter Tuning**
+
+For each model, I initialized the hyperparameters either based on common best practices or through a brief tuning process on a smaller validation subset (e.g., 10% of the dataset). In particular:
+
+- Logistic Regression: max_iter=1000, using standard L2 regularization.
+- Random Forest: n_estimators=100, with Gini impurity, and a maximum depth set by the default or auto termination.
+- XGBoost and LightGBM: n_estimators=100, max_depth=6, and learning_rate=0.1. I briefly experimented with learning rates {0.01, 0.1, 0.2} and found 0.1 to be optimal in balancing speed and accuracy.
+- Support Vector Machine: Used an RBF kernel with default γ (scale), and I tested C values in {1, 10, 100} before choosing C=1 for the final run.
+- Neural Networks (CNNs/ResNet): I employed an Adam optimizer with a fixed learning rate of 0.001, trained for 20 epochs and a batch size of 32. Basic CNN architectures started with 32 filters, then 64, etc., while the deeper architectures added dropout rates of 0.25 or 0.5. In the custom ResNet, I used 32 and 64 filters in each residual block.
+
+I did not employ pre-trained Iights in these experiments because the input resolution (20x20) differs substantially from typical large-scale ImageNet training. Instead, all CNN-based models were trained from scratch. I performed manual hyperparameter tuning rather than a full grid or random search, given the relatively small image size and the computational cost.
 
 **Modelling**
 
@@ -123,8 +147,19 @@ The model's training history further supports its strong learning characteristic
 These metrics collectively suggest that the custom ResNet model achieved outstanding classification performance with robust generalization. While some fluctuation occurred during training, the model ultimately stabilized, achieving effective feature learning likely enhanced by the unique advantages of residual connections in handling image features.
 
 
+Feature maps represent the activation outputs of convolutional layers, allowing analysis of feature extraction capabilities at each layer. 
 
-Feature maps represent the activation outputs of convolutional layers, allowing analysis of feature extraction capabilities at each layer. Different colors correspond to activation value ranges, illustrating the network's response intensity to inputs at specific layers. With increasing convolutional layer depth, the complexity of feature extraction progressively intensifies:
+To visualize the convolutional layers’ activation maps, I created an intermediate Keras model that outputs the feature maps from each convolutional layer. Concretely, I used:
+
+```python
+layer_outputs = [layer.output for layer in model.layers if isinstance(layer, tf.keras.layers.Conv2D)]
+feature_model = tf.keras.models.Model(inputs=model.input, outputs=layer_outputs)
+```
+
+I then passed a single input image (e.g., an image from the test set) through feature_model.predict(), obtaining a stack of 2D feature maps for each convolutional layer. Each feature map was then normalized (e.g., min-max scaling) to enhance visibility and plotted using Matplotlib. Different layer depths reveal different hierarchical features, such as edges or textures in earlier layers and more abstract shapes in deeper layers.
+
+Different colors correspond to activation value ranges, illustrating the network's response intensity to inputs at specific layers. With increasing convolutional layer depth, the complexity of feature extraction progressively intensifies:
+
 
 **Conv Layer 1** captures simple edges and textures, highlighting local variations in the input.
 ![feature_maps_layer_1](https://github.com/user-attachments/assets/f085212b-038e-4185-ad33-df841d70b2d6)
@@ -155,7 +190,7 @@ From lower to higher layers, the feature maps of ResNet illustrate the network's
 **Figure 7: Feature Importantce 1-10 with ResNet**
 
 ## Discussion (Part 1)
-In object detection across four scenarios, both a basic convolutional neural network (CNN) and a residual network (ResNet) were applied, with ResNet consistently producing fewer detection boxes than the CNN model. The CNN demonstrated a tendency toward generating a higher number of detections (with more false positives), while ResNet achieved more concise detections with higher confidence scores.
+In object detection across four scenarios, both a basic CNN and a ResNet were applied, with ResNet consistently producing fewer detection boxes than the CNN model. The CNN demonstrated a tendency toward generating a higher number of detections (with more false positives), while ResNet achieved more concise detections with higher confidence scores.
 
 **Scenario 1: Airport Scene**
 
