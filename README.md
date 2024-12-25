@@ -67,7 +67,7 @@ The 1:3 class distribution ratio aligns with standard practices in computer visi
 The image resolution and dimensionality correspond to optimal parameters identified in satellite-based object detection literature
 The inclusion of diverse environmental conditions enhances model generalization capabilities
 
-**Validation on Complete Scenes**
+**Validation on Complete Scenes:**
 
 While our models are trained on 20x20 patches, the goal is to detect planes in larger satellite scenes. To accomplish this, I apply a sliding window approach across each full-resolution satellite scene. Concretely, I shift a 20x20 window over the scene in small strides (e.g., 5 pixels), extract each patch, and feed it into the trained model for classification. Any patch that yields a probability above a chosen detection threshold (e.g., 0.5) is considered a detection. To reduce overlapping boxes, I apply non-maximum suppression (NMS) on these detection proposals, thereby merging adjacent bounding boxes into a single detection region.
 
